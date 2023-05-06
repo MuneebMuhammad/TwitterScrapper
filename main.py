@@ -34,6 +34,8 @@ def get_explore_tweets(n):
     driver = webdriver.Chrome()
     driver.get(f'https://twitter.com/explore')
 
+    time.sleep(20)
+
     last_height = 10
     tweets = []
     while len(tweets) < n:
@@ -51,8 +53,21 @@ def get_explore_tweets(n):
     print(len(tweets))
     input("Enter")
 
+def get_tweet_from_URL(url):
+    driver = webdriver.Chrome()
+    driver.get(url)
+    print("Sleeping")
+    time.sleep(20)
+
+    td = driver.find_element(By.XPATH, "//div[@data-testid='cellInnerDiv']")
+    tweetDiv = td.find_elements(By.XPATH, "//div[@dir='auto' and @lang='en']")
+    # tweetDiv = driver.find_elements(By.XPATH, "//div[@dir='auto' and @lang='en']")
+    if (len(tweetDiv)>=1):
+        tweet = tweetDiv[0].text
+        print("Tweet:", tweet)
+    input("Enter")
+
 
 # get_n_tweets(10, 'elonmusk')
-
-get_explore_tweets(10)
-
+# get_explore_tweets(10)
+get_tweet_from_URL("https://twitter.com/Exulansista/status/1654540589730521088")
