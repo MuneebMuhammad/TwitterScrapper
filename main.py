@@ -17,7 +17,7 @@ def get_n_tweets(n, username):
     tweets = []
     while len(tweets) < n:
         driver.execute_script(f"window.scrollTo(0, {last_height+2});")
-        time.sleep(1)
+        time.sleep(0.1)
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
@@ -30,21 +30,29 @@ def get_n_tweets(n, username):
     print(len(tweets))
     input("Enter")
 
-
-def get_n_hashtag_tweets(n, hashtag):
-    driver = webdriver.Chrome()
-    driver.get(f'https://twitter.com/hashtag/{hashtag}')
-    time.sleep(30)
-
-
-def get_explore_tweets():
+def get_explore_tweets(n):
     driver = webdriver.Chrome()
     driver.get(f'https://twitter.com/explore')
-    input("enter")
+
+    last_height = 10
+    tweets = []
+    while len(tweets) < n:
+        driver.execute_script(f"window.scrollTo(0, {last_height + 2});")
+        time.sleep(0.1)
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        tweetDiv = driver.find_elements(By.XPATH, "//div[@dir='auto' and @lang='en']")[:n]
+        for i, tweet in enumerate(tweetDiv):
+            if len(tweet.text) > 1 and tweet.text not in tweets:
+                tweets.append(tweet.text)
+        last_height += 200
+    print(tweets)
+    print(len(tweets))
+    input("Enter")
 
 
-get_n_tweets(10, 'elonmusk')
-# get_n_hashtag_tweets(10, 'pti')
+# get_n_tweets(10, 'elonmusk')
 
-# get_explore_tweets()
+get_explore_tweets(10)
 
