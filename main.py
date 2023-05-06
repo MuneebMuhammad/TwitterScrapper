@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
+# opens a userprofile and gets the first 'n' tweets
 def get_n_tweets(n, username):
     driver = webdriver.Chrome()
     driver.get(f'https://twitter.com/{username}')
@@ -30,6 +32,7 @@ def get_n_tweets(n, username):
     print(len(tweets))
     input("Enter")
 
+# opens explore page of twitter and gets the first 'n' tweets
 def get_explore_tweets(n):
     driver = webdriver.Chrome()
     driver.get(f'https://twitter.com/explore')
@@ -53,6 +56,7 @@ def get_explore_tweets(n):
     print(len(tweets))
     input("Enter")
 
+# given URL of a tweet, it will return the text in that tweet.
 def get_tweet_from_URL(url):
     driver = webdriver.Chrome()
     driver.get(url)
