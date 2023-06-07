@@ -7,7 +7,16 @@ import time
 import csv
 import pandas as pd
 
-driver = webdriver.Chrome()
+from io import BytesIO
+from PIL import Image
+
+import requests
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
+driver = webdriver.Chrome(ChromeDriverManager().install())
+
+# driver = webdriver.Chrome()
 # opens a userprofile and gets the first 'n' tweets
 
 def get_n_tweets_from_current_page(n):
@@ -252,12 +261,37 @@ def getHashtagTweets(hashtag="elonmusk"):
     # df.t(f"hashtag:{hashtag}.xlsx", index=False)
     df.to_csv(f"hashtag:{hashtag}.xlsx", index=False, sep=',')
 
-# def hashtag_tweets()
+def displayImageFromURL(imageURL):
+    response = requests.get(imageURL)
+    img = Image.open(BytesIO(response.content))
 
-login()
-getHashtagTweets()
+    # Display the image
+    img.show()
+
+def imageTweet(url="https://twitter.com/US_Stormwatch/status/1666238597031395328"):
+    driver.get(url)
+    td = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//div[@data-testid='cellInnerDiv']")))
+    # td = driver.find_element(By.XPATH, "//div[@data-testid='cellInnerDiv']")
+    tweetTextDiv = td.find_elements(By.XPATH, "//div[@dir='auto' and @lang='en']")
+    # tweetDiv = driver.find_elements(By.XPATH, "//div[@dir='auto' and @lang='en']")
+    if (len(tweetTextDiv) >= 1):
+        tweet = tweetTextDiv[0].text
+        print("Tweet:", tweet)
+    imageURL = None
+    try:
+        imageURL = td.find_elements(By.XPATH, ".//img[@alt='Image']")[0].get_attribute('src')
+
+    except:
+        print("no image")
+    if imageURL: displayImageFromURL(imageURL)
+
+    input("enter")
+
+# login()
+# getHashtagTweets()
 # get_top_trends()
 # get_n_tweets(100, 'elonmusk')
 # get_explore_tweets(10)
 # get_tweet_from_URL("https://twitter.com/Exulansista/status/1654540589730521088")
+imageTweet()
 
